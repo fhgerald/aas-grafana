@@ -4,8 +4,8 @@ public class ConnectorOptions
 {
     public ConnectorOptions()
     {
-        AasServerHost = "http://localhost:5080/aas";
+        RegistryUri = "http://localhost:4000/registry";
     }
     
-    public string AasServerHost { get; set; }
+    public string RegistryUri { get; set; }
 }

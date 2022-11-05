@@ -9,25 +9,37 @@ public class Reference
     /// Constructor
     /// </summary>
     /// <param name="subModelId"></param>
-    /// <param name="subModelElementId"></param>
-    public Reference(string subModelId, string subModelElementId)
+    /// <param name="subModelElementIdPathList"></param>
+    public Reference(string aasId, string subModelId, string[] subModelElementIdPathList)
     {
+        AasId = aasId;
         SubModelId = subModelId;
-        SubModelElementId = subModelElementId;
+        SubModelElementIdPathList = subModelElementIdPathList;
     }
     
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="referenceKey">A reference key for grafana Simple JSON in format AssetId/SubModelId/ElementId1/ElementId2</param>
+    /// <exception cref="InvalidOperationException"></exception>
     public Reference(string referenceKey)
     {
-        var pos = referenceKey.IndexOf('/');
-        if (pos == -1)
+        var elementPath = referenceKey.Split("]/[");
+        if (elementPath.Length < 3)
         {
             throw new InvalidOperationException($"Invalid reference key: '{referenceKey}'.");
         }
 
-        SubModelId = referenceKey.Substring(0, pos);
-        SubModelElementId = referenceKey.Substring(pos+1);
+        AasId = elementPath[0].Substring(1);
+        SubModelId = elementPath[1];
+        SubModelElementIdPathList = elementPath[2].Substring(0, elementPath[2].Length-1).Split('/').ToList();
     }
     
+    /// <summary>
+    /// Returns AAS Id
+    /// </summary>
+    public string AasId { get; set; }
+
     /// <summary>
     /// The id of sub model
     /// </summary>
@@ -36,14 +48,22 @@ public class Reference
     /// <summary>
     /// Tjhe id of element in sub model
     /// </summary>
-    public string SubModelElementId { get; set; }
+    public IReadOnlyList<string> SubModelElementIdPathList { get; set; }
 
     /// <summary>
     /// Returns unique key for the reference
     /// </summary>
     public string Key
     {
-        get { return $"{SubModelId}/{SubModelElementId}"; }
+        get { return $"[{AasId}]/[{SubModelId}]/[{SubModelElementPath}]"; }
+    }
+    
+    /// <summary>
+    /// Returns unique key for the reference
+    /// </summary>
+    public string SubModelElementPath
+    {
+        get { return string.Join('/', SubModelElementIdPathList); }
     }
 
     /// <inheritdoc />
@@ -55,12 +75,20 @@ public class Reference
         }
 
         var reference = (Reference)obj;
-        return SubModelId == reference.SubModelId && SubModelElementId == reference.SubModelElementId;
+        var equals = AasId == AasId && SubModelId == reference.SubModelId &&
+                SubModelElementIdPathList.Count == reference.SubModelElementIdPathList.Count;
+        
+        for (int i = 0; i < reference.SubModelElementIdPathList.Count; i++)
+        {
+            equals &= SubModelElementIdPathList[i] == reference.SubModelElementIdPathList[i];
+        }
+
+        return equals;
     }
 
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        return SubModelId.GetHashCode() ^ SubModelElementId.GetHashCode();
+        return SubModelId.GetHashCode() ^ SubModelElementPath.GetHashCode();
     }
 }

@@ -48,7 +48,7 @@ internal class RecodingStrategyService : IRecodingStrategyService
     {
         if (_timeSeriesRecorderStrategies.ContainsKey(reference))
         {
-            throw new RecordingStrategyException($"Reference '{reference.SubModelId}/{reference.SubModelElementId}' is already recorded.");
+            throw new RecordingStrategyException($"Reference '{reference.SubModelId}/{reference.SubModelElementIdPathList}' is already recorded.");
         }
         
         var repository = new InMemoryDataSeriesRepository<double>(reference);

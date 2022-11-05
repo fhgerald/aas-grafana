@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="BaSyx.AAS.Client.Http" Version="1.0.0" />
+        <PackageReference Include="BaSyx.Registry.Client.Http" Version="1.0.0" />
         <PackageReference Include="Meshmakers.Common.Shared" Version="4.0.2211.3005" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>

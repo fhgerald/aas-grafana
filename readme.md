@@ -17,7 +17,7 @@ See [here](https://grafana.com/docs/grafana/latest/setup-grafana/installation/) 
 
 == Getting started with sample code
 
-By default, the AAS server is expected at ```http://localhost:5080/aas```. If you want to change this, set environment variable ``GRAF_CONNECTOROPTIONS__AASSERVERHOST`` or command line arg ``--CONNECTOROPTIONS:AASSERVERHOST={value}``. 
+By default, the AAS Registry is expected at ```http://localhost:4000/registry```. If you want to change this, set environment variable ``GRAF_CONNECTOROPTIONS__REGISTRYURI`` or command line arg ``--CONNECTOROPTIONS:REGISTRYURI={value}``. 
 
 Start the project, check if page https://localhost:7240/swagger/index.html (Swagger Page) is available. 
 

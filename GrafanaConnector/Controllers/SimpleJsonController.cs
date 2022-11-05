@@ -43,7 +43,7 @@ public class SimpleJsonController : ControllerBase
     public IActionResult Search()
     {
         return Ok(_recodingStrategyService.GetReferences().Select(x=> 
-            new ReferenceViewModel{ Text = $"{x.SubModelId}->{x.SubModelElementId}", Value = x.Key}));
+            new ReferenceViewModel{ Text = $"{x.AasId}: {x.SubModelId}->{x.SubModelElementPath}", Value = x.Key}));
     }
     
     /// <summary>
