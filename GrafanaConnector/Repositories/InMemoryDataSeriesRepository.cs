@@ -43,7 +43,7 @@ internal class InMemoryDataSeriesRepository<T> : IDataSeriesRepository<T>
 			.SkipWhile(p => p.DateTime < startDateTime)
 			.TakeWhile(p => p.DateTime <= endDateTime);
 
-	public virtual void Dispose()
+	public void Dispose()
 	{
 		// No unmanaged resources needs to be freed in case of in-memory.
 	}
