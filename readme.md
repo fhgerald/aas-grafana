@@ -24,15 +24,19 @@ See [here](https://grafana.com/docs/grafana/latest/setup-grafana/installation/) 
 
 After installation start and check your Grafana instance via http://localhost:3000, username ``admin`` and password ``admin``. 
 
-## Getting started with sample code
+## Prepare Grafana 
+
+Because we need a generic JSON backend datasource for our project, install the SimpleJSON Plugin via [Plug-Ins page](http://localhost:3000/plugins?filterBy=all&filterByType=all&q=JSON)
 
 By default, the AAS Registry is expected at ```http://localhost:4000/registry```. If you want to change this, set environment variable ``GRAF_CONNECTOROPTIONS__REGISTRYURI`` or command line arg ``--CONNECTOROPTIONS:REGISTRYURI={value}``. 
 
-Start the project, check if page https://localhost:7240/swagger/index.html (Swagger Page) is available. 
+## Getting started with sample code
 
-Access Grafana and install SimpleJSON using the [Plug-Ins page](http://localhost:3000/plugins?filterBy=all&filterByType=all&q=JSON)
+[_TODO_: Complete the following description]
 
-Add a new data source and configure the IP address if the grafana connector
+Before we start with our project, check if page https://localhost:7240/swagger/index.html (Swagger Page) is available.
+
+Add a new data source and configure the IP address if the grafana connector...???? 
 
 Create a dashboard.
 
