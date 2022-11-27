@@ -88,6 +88,9 @@ internal class TwinClientService
     private void GetAssets(Action<AssetAdministrationShellHttpClient, IAssetAdministrationShellDescriptor> action,
         Predicate<IAssetAdministrationShellDescriptor>? predicate = null)
     {
+        // TODO: Insert your filter here and make sure that only your assessments will  be shown in Grafana; 
+        //       so all Festo and Bosch assessments shouldn't be shown in Grafana
+        
         var retrievedShellDescriptors = predicate == null
             ? _registryClient.RetrieveAllAssetAdministrationShellRegistrations()
             : _registryClient.RetrieveAllAssetAdministrationShellRegistrations(predicate);
