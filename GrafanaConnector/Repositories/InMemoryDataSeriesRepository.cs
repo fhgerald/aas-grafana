@@ -4,6 +4,10 @@ using GrafanaConnector.Models;
 
 namespace GrafanaConnector.Repositories;
 
+// TODO: Use the following class as template for a new persistance class which
+//       persists all data to flat files (or optional database)
+//       Then Grafana should be able to retrieve timeseries for all numeric values    
+
 /// <summary>
 /// Implements a memory-based data series repository, that means no data gets stored on hard disk.
 /// </summary>
