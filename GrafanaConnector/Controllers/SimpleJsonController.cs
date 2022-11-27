@@ -45,7 +45,7 @@ public class SimpleJsonController : ControllerBase
         return Ok(_recodingStrategyService.GetReferences().Select(x=> 
             new ReferenceViewModel{ Text = $"{x.AasId}: {x.SubModelId}->{x.SubModelElementPath}", Value = x.Key}));
     }
-    
+
     /// <summary>
     /// Returns metrics based on input.
     /// </summary>
@@ -66,6 +66,12 @@ public class SimpleJsonController : ControllerBase
         var dataTo = query.Range.To + halfSmoothingWindow;
 
         var samplingInterval = new TimeSpan(query.IntervalMs * TimeSpan.TicksPerMillisecond);
+
+        // Ensure that there is a valid target
+        if (query.Targets.Any(t => string.IsNullOrWhiteSpace(t.Target)))
+        {
+            return Ok(new TimeSeriesViewModel[]{});
+        }
 
         return Ok
         (
