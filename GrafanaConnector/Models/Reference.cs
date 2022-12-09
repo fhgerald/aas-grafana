@@ -75,7 +75,7 @@ public class Reference
         }
 
         var reference = (Reference)obj;
-        var equals = AasId == AasId && SubModelId == reference.SubModelId &&
+        var equals = AasId == reference.AasId && SubModelId == reference.SubModelId &&
                 SubModelElementIdPathList.Count == reference.SubModelElementIdPathList.Count;
         
         for (int i = 0; i < reference.SubModelElementIdPathList.Count; i++)

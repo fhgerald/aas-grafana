@@ -20,7 +20,8 @@ internal class RecodingManagementService : IHostedService
     public Task StartAsync(CancellationToken cancellationToken)
     {
         var time = new TimeSpan(0, 0, 10);
-        foreach (var key in _twinClientService.GetReferences())
+        var references = _twinClientService.GetReferences();
+        foreach (var key in references)
         {
             _recodingStrategyService.AddIntervalBasedStrategy(key, time, r => Convert.ToDouble(_twinClientService.GetValue(r)));
         }

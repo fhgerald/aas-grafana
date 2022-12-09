@@ -80,17 +80,19 @@ public class SimpleJsonController : ControllerBase
                 target =>
                 {
                     var reference = new Reference(target.Target);
-                    var repository = _recodingStrategyService.GetRepository(reference);
+                    var repository = _recodingStrategyService.TryGetRepository(reference);
                     return (Reference: target.Target, Repository: repository);
                 }
             ).Select
             (
-                dsg => new TimeSeriesViewModel
-                (
-                    dsg.Reference,
-                    dsg.Repository.GetDataPoints(dataFrom, dataTo)
-                        .FilterDataPoints(query.Range.From, query.Range.To, samplingInterval, smoothingWindow).Select(x=> new object[]{x.Value, x.DateTime.ToUnixEpochInMilliSecondsTime()}).ToArray()
-                )).ToArray()
+                dsg =>
+                {
+                    var dataPoints = dsg.Repository?.GetDataPoints(dataFrom, dataTo)
+                        .FilterDataPoints(query.Range.From, query.Range.To, samplingInterval, smoothingWindow)
+                        .Select(x => new object[] { x.Value, x.DateTime.ToUnixEpochInMilliSecondsTime() }).ToArray();
+
+                    return new TimeSeriesViewModel(dsg.Reference, dataPoints ?? new object[][] { });
+                }).ToArray()
         );
     }
 
