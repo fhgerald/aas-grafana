@@ -28,6 +28,15 @@ internal class RecodingStrategyService : IRecodingStrategyService
         return _timeSeriesRecorderStrategies[reference].Repository;
     }
 
+    public IDataSeriesRepository<double>? TryGetRepository(Reference reference)
+    {
+        if (!_timeSeriesRecorderStrategies.ContainsKey(reference))
+        {
+            return null;
+        }
+        return _timeSeriesRecorderStrategies[reference].Repository;
+    }
+
     /// <summary>
     /// Returns all recorded sub model elements
     /// </summary>
@@ -48,7 +57,7 @@ internal class RecodingStrategyService : IRecodingStrategyService
     {
         if (_timeSeriesRecorderStrategies.ContainsKey(reference))
         {
-            throw new RecordingStrategyException($"Reference '{reference.SubModelId}/{reference.SubModelElementIdPathList}' is already recorded.");
+            throw new RecordingStrategyException($"Reference '{reference.SubModelId}/{string.Join(',', reference.SubModelElementIdPathList)}' is already recorded.");
         }
         
         var repository = new InMemoryDataSeriesRepository<double>(reference);

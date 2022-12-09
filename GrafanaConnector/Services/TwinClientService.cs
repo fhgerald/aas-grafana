@@ -3,6 +3,7 @@ using BaSyx.Models.Connectivity.Descriptors;
 using BaSyx.Models.Core.AssetAdministrationShell.Generics;
 using BaSyx.Models.Core.AssetAdministrationShell.Implementations;
 using BaSyx.Models.Core.Common;
+using BaSyx.Models.Extensions;
 using BaSyx.Registry.Client.Http;
 using GrafanaConnector.Models;
 using Microsoft.Extensions.Options;
@@ -52,7 +53,7 @@ internal class TwinClientService
             }
             else
             {
-                _logger.LogWarning("Retrieving sub models of AAS \'{Id}\' failed: {Messages}", 
+                _logger.LogWarning("Retrieving sub models of AAS \'{Id}\' failed: {Messages}",
                     shellDescriptor.Identification.Id, string.Join("/", result.Messages.Select(x => x.Text)));
             }
         });
@@ -75,14 +76,24 @@ internal class TwinClientService
             throw new TwinClientException("Asset id '{' cannot be loaded from registry:\n" + details);
         }
 
-        var result = GetClientFromDescriptor(shellDescriptor.Entity)
-            .RetrieveSubmodelElementValue(reference.SubModelId, reference.SubModelElementPath);
-        if (result.Success && result.Entity != null)
-        {
-            return result.Entity.Value;
-        }
+        var client = GetClientFromDescriptor(shellDescriptor.Entity);
+        var resultValue = client.RetrieveSubmodelElement(reference.SubModelId, reference.SubModelElementPath);
 
-        return null;
+        try
+        {
+            var value = client.RetrieveSubmodelElementValue(reference.SubModelId, reference.SubModelElementPath);
+
+            if (resultValue.Success && resultValue.Entity != null)
+            {
+                return value.Entity.Value;
+            }
+
+            return null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     private void GetAssets(Action<AssetAdministrationShellHttpClient, IAssetAdministrationShellDescriptor> action,

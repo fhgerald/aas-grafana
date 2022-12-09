@@ -45,7 +45,7 @@ public class SimpleJsonController : ControllerBase
         return Ok(_recodingStrategyService.GetReferences().Select(x=> 
             new ReferenceViewModel{ Text = $"{x.AasId}: {x.SubModelId}->{x.SubModelElementPath}", Value = x.Key}));
     }
-    
+
     /// <summary>
     /// Returns metrics based on input.
     /// </summary>
@@ -73,6 +73,12 @@ public class SimpleJsonController : ControllerBase
             return Ok(new TimeSeriesViewModel[]{});
         }
 
+        // Ensure that there is a valid target
+        if (query.Targets.Any(t => string.IsNullOrWhiteSpace(t.Target)))
+        {
+            return Ok(new TimeSeriesViewModel[]{});
+        }
+
         return Ok
         (
             query.Targets.Select
@@ -80,17 +86,19 @@ public class SimpleJsonController : ControllerBase
                 target =>
                 {
                     var reference = new Reference(target.Target);
-                    var repository = _recodingStrategyService.GetRepository(reference);
+                    var repository = _recodingStrategyService.TryGetRepository(reference);
                     return (Reference: target.Target, Repository: repository);
                 }
             ).Select
             (
-                dsg => new TimeSeriesViewModel
-                (
-                    dsg.Reference,
-                    dsg.Repository.GetDataPoints(dataFrom, dataTo)
-                        .FilterDataPoints(query.Range.From, query.Range.To, samplingInterval, smoothingWindow).Select(x=> new object[]{x.Value, x.DateTime.ToUnixEpochInMilliSecondsTime()}).ToArray()
-                )).ToArray()
+                dsg =>
+                {
+                    var dataPoints = dsg.Repository?.GetDataPoints(dataFrom, dataTo)
+                        .FilterDataPoints(query.Range.From, query.Range.To, samplingInterval, smoothingWindow)
+                        .Select(x => new object[] { x.Value, x.DateTime.ToUnixEpochInMilliSecondsTime() }).ToArray();
+
+                    return new TimeSeriesViewModel(dsg.Reference, dataPoints ?? new object[][] { });
+                }).ToArray()
         );
     }
 

@@ -11,6 +11,13 @@ public interface IRecodingStrategyService
     /// <param name="reference"></param>
     /// <returns></returns>
     IDataSeriesRepository<double> GetRepository(Reference reference);
+    
+    /// <summary>
+    /// Returns repository of given reference
+    /// </summary>
+    /// <param name="reference"></param>
+    /// <returns></returns>
+    IDataSeriesRepository<double>? TryGetRepository(Reference reference);
 
     /// <summary>
     /// Returns all recorded sub model elements
